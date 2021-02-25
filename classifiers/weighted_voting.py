@@ -2,9 +2,9 @@ import pandas
 import numpy as np
 from sklearn import preprocessing
 
-from model_committee.data_preparation import mask_columns
-from model_committee.plotting import valid_test_acc_curves
-from model_committee.results import get_metrics, get_avg_metrics
+from utils.data_preparation import mask_columns
+from utils.plotting import valid_test_acc_curves
+from utils.results import get_metrics, get_avg_metrics
 
 overview_path = '/home/peter/media/data/covid-19/models-BINARY-NEWEST/overview-2021-02-06_16-45-10.csv'
 

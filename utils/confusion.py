@@ -2,8 +2,6 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from utils.filesystem_saver import json_dump
-
 
 @dataclass
 class Confusion:
@@ -142,9 +140,6 @@ class Confusion:
             return float(m[0, 1]) / float(m[0, 1] + m[1, 1])
         except ZeroDivisionError:
             return None
-
-    def save(self, path):
-        json_dump(path, 'confusion.json', self)
 
     def to_json(self):
         return {'matrix': self.matrix.tolist(),

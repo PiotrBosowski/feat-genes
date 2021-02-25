@@ -6,8 +6,8 @@ from keras.layers import Dense, Input
 from keras.models import Sequential
 from keras.optimizers import Adam
 
-from model_committee.plotting import valid_test_acc_curves, plot_history_loss
-from model_committee.results import get_metrics, get_avg_metrics
+from utils.plotting import valid_test_acc_curves, plot_history_loss
+from utils.results import get_metrics, get_avg_metrics
 from utils.filesystem_saver import next_name
 
 

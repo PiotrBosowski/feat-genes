@@ -1,8 +1,8 @@
 from sklearn import svm
 
-from model_committee.data_preparation import mask_columns, prepare_data
-from model_committee.plotting import valid_test_acc_curves
-from model_committee.results import get_metrics, get_avg_metrics
+from utils.data_preparation import mask_columns, prepare_data
+from utils.plotting import valid_test_acc_curves
+from utils.results import get_metrics, get_avg_metrics
 
 
 def train_svm(kernel, train_X, train_y, valid_X, valid_y, test_X, test_y, mask=None):

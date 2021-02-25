@@ -1,7 +1,7 @@
 import random
 from multiprocessing.pool import ThreadPool
 
-from model_committee.gen_alg_optimizer.chromosome import Chromosome
+from generator.chromosome import Chromosome
 
 
 class GENerator:

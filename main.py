@@ -1,10 +1,14 @@
-from model_committee.data_preparation import prepare_data, get_models_count
-from model_committee.gen_alg_optimizer.chromosome import Chromosome
-from model_committee.gen_alg_optimizer.fitness import SVMacc, XGBoostAcc, \
-    CumulativeVotingAcc, MajorityVotingAcc, WeightedVotingAcc
-from model_committee.gen_alg_optimizer.generator import GENerator
-from model_committee.settings import BINARY_valid_1000, BINARY_test_3000, \
-    BINARY_test_12108
+from utils.data_preparation import prepare_data, get_models_count
+from generator.chromosome import Chromosome
+from fitnesses.fitness import XGBoostAcc
+from generator.generator import GENerator
+
+BINARY_valid_1000 = '/home/peter/covid/datasets/2k-0.5k-rest-BINARY-NEWEST/valid/combined_outputs-2021-02-08_01-30-23_SOURCE_COLUMN.csv'
+BINARY_test_15108 = '/home/peter/covid/datasets/2k-0.5k-rest-BINARY-NEWEST/test/combined_outputs-2021-02-08_01-21-46_SOURCE_COLUMN.csv'
+# 15108 split between 3000 and 12108:
+BINARY_test_3000 = '/home/peter/covid/datasets/2k-0.5k-rest-BINARY-NEWEST-COMMITTEE/train/combined_outputs_SOURCE_COLUMN.csv'
+BINARY_test_12108 = '/home/peter/covid/datasets/2k-0.5k-rest-BINARY-NEWEST-COMMITTEE/test/combined_outputs_SOURCE_COLUMN.csv'
+
 
 if __name__ == '__main__':
     output_path = f'/home/peter/Desktop/Inzynierka/committee_outputs/finalne/results_xgboost_2.txt'
@@ -13,11 +17,7 @@ if __name__ == '__main__':
     valid_X, valid_y = prepare_data(BINARY_test_3000)
     test_X, test_y = prepare_data(BINARY_test_12108)
 
-    fitness_svm = SVMacc(train_X, train_y, valid_X, valid_y)  # 500
-    fitness_xgboost = XGBoostAcc(train_X, train_y, valid_X, valid_y)  # 150
-    fitness_cumul_voting = CumulativeVotingAcc(train_X, train_y, valid_X, valid_y)  # 2000
-    fitness_major_voting = MajorityVotingAcc(train_X, train_y, valid_X, valid_y)
-    fitness_weighted_voting = WeightedVotingAcc(train_X, train_y, valid_X, valid_y)
+    fitness_xgboost = XGBoostAcc(train_X, train_y, valid_X, valid_y)
 
     generator = GENerator(genes_count=get_models_count(BINARY_test_3000),
                           population_count=80,
@@ -31,4 +31,4 @@ if __name__ == '__main__':
                           chernobyl_every=80,
                           output_path=f'/home/peter/Desktop/Inzynierka/committee_outputs/finalne/results_xgboost_4.txt',
                           num_def_siblings=0)
-    generator.run(max_epochs=10000)
+    generator.run(max_epochs=1000)
