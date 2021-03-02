@@ -1,6 +1,6 @@
+from fitnesses.xgboost_fitness import XGBoostAcc
 from utils.data_preparation import prepare_data, get_models_count
 from generator.chromosome import Chromosome
-from fitnesses.fitness import XGBoostAcc
 from generator.generator import GENerator
 
 BINARY_valid_1000 = '/home/peter/covid/datasets/2k-0.5k-rest-BINARY-NEWEST/valid/combined_outputs-2021-02-08_01-30-23_SOURCE_COLUMN.csv'

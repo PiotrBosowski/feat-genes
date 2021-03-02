@@ -6,6 +6,8 @@ from collections import namedtuple
 
 from sklearn import metrics
 
+from utils.confusion import Confusion
+
 Metrics = namedtuple('Metrics', "acc rec prec f1 mcc wrong_preds")
 
 
@@ -114,6 +116,26 @@ def pull_wrong_images(incorrect_preds, output_path, origins_path,
                                         pred['img_path'])
                 os.makedirs(os.path.dirname(out_path), exist_ok=True)
                 shutil.copy(os.path.join(dataset_path, pred['img_path']), out_path)
+
+def per_source_stats(dataset, wrong_preds):
+    dataset['wrong_pred'] = dataset['img_path'].isin(wrong_preds.img_path.to_list())
+    sources = dataset['origin_datasource'].unique()
+    confusion_per_src = {}
+    for src in sources:
+        src_images = dataset[(dataset['origin_datasource'] == src)]
+        confusion_per_src[src] = Confusion.from_2d_list(
+            [
+                [len(src_images[(src_images['label'] == 1) & (src_images['wrong_pred'] == False)]),
+                 len(src_images[(src_images['label'] == 0) & (src_images['wrong_pred'] == True)])],
+                [len(src_images[(src_images['label'] == 1) & (src_images['wrong_pred'] == True)]),
+                 len(src_images[(src_images['label'] == 0) & (src_images['wrong_pred'] == False)])],
+            ], ['covid', 'non-covid'])
+
+    for src, cnf in confusion_per_src.items():
+        print(src)
+        print(cnf)
+        print("")
+    return confusion_per_src
 
 if __name__ == "__main__":
     pull_wrong_images('/home/peter/covid/wrong_predictions_BINARY/wrong_preds.csv',

@@ -24,4 +24,3 @@ class XGBoostAcc:
         pred_y = classifier.predict(test_X)
         chrom.fitness = metrics.accuracy_score(self.test_y, pred_y)
         return chrom.fitness
-

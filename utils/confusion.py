@@ -160,9 +160,9 @@ class Confusion:
         try:
             return float(m[0, 0] * m[1, 1] - m[0, 1] * m[1, 0]) / \
                    float(((m[0, 0] + m[1, 0]) *
-                   (m[0, 0] + m[0, 1]) *
-                   (m[1, 1] + m[1, 0]) *
-                   (m[1, 1] + m[0, 1])) ** 0.5)
+                          (m[0, 0] + m[0, 1]) *
+                          (m[1, 1] + m[1, 0]) *
+                          (m[1, 1] + m[0, 1])) ** 0.5)
         except ZeroDivisionError:
             return None
 

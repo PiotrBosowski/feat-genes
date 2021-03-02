@@ -1,7 +1,7 @@
 import random
 from multiprocessing.pool import ThreadPool
 
-from generator.chromosome import Chromosome
+from chromosome import Chromosome
 
 
 class GENerator:
@@ -56,20 +56,16 @@ class GENerator:
     def run(self, max_epochs):
         for epoch in range(max_epochs):
             print(f"Epoch [{epoch + 1}]:", end=' ')
-
             # calculating fitness in parallel:
             pool = ThreadPool(8)
             pool.map(self.fitness_fn, self.population)
-
             # sorting by fitness descending
             self.population.sort(
                 key=lambda chrom: chrom.fitness_seq_len_regularized(),
                 reverse=True)
-
             # save better results:
             for chrom in reversed(self.population):
                 self.save_solution_if_better(chrom)
-
             print(f"max_fit: [{self.population[0].fitness:.5f}]", end=' ')
             print(f"with seq_len of {sum(self.population[0].genes)},", end=' ')
             print(f"avg_fit: [{self.avg_fit():.5f}]", end=' ')
@@ -80,11 +76,9 @@ class GENerator:
             self.population = self.population[self.elites_surviving:]
             survived.extend(GENerator.elite_defective_sibling(survived[0],
                                                               self.num_def_siblings))
-
             # the rest is fighting for survival:
             survived.extend(self.selection_fn(self.population,
                                               self.plebs_surviving - self.num_def_siblings))  # because of the sibling
-
             survived.extend(self.crossover_fn(survived,
                                               self.population_count))
             if self.chernobyl_every:
