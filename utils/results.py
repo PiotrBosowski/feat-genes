@@ -6,7 +6,7 @@ from collections import namedtuple
 
 from sklearn import metrics
 
-from utils.confusion import Confusion
+from modules.confusion.confusion import Confusion
 
 Metrics = namedtuple('Metrics', "acc rec prec f1 mcc wrong_preds")
 

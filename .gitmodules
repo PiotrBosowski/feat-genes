@@ -1,0 +1,9 @@
+[submodule "modules/confusion"]
+	path = modules/confusion
+	url = https://github.com/piotrbosowski/confusion
+[submodule "modules/stopwatch"]
+	path = modules/stopwatch
+	url = https://github.com/piotrbosowski/stopwatch
+[submodule "modules/paint_it"]
+	path = modules/paint_it
+	url = https://github.com/piotrbosowski/paint-it
