@@ -1,7 +1,7 @@
 import random
 from multiprocessing.pool import ThreadPool
 
-from chromosome import Chromosome
+from chromosome.chromosome import Chromosome
 
 
 class GENerator:
