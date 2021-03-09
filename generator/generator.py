@@ -20,7 +20,11 @@ class GENerator:
         self.crossover_ratio = crossover_ratio
         self.crossover_fn = crossover_fn
         self.mutation_ratio = mutation_ratio
+        self.train_data_provider = None
+        self.valid_data_provider = None
         self.elitism_ratio = elitism_ratio
+        self.running_condition = None
+        self.epoch = None
         self.chernobyl_every = chernobyl_every
         self.genes_to_mutate = round(genes_count * genes_to_mutate) \
             if genes_to_mutate else 1
@@ -53,23 +57,47 @@ class GENerator:
             siblings.append(Chromosome(new_genes))
         return siblings
 
-    def run(self, max_epochs):
-        for epoch in range(max_epochs):
-            print(f"Epoch [{epoch + 1}]:", end=' ')
-            # calculating fitness in parallel:
-            pool = ThreadPool(8)
-            pool.map(self.fitness_fn, self.population)
-            # sorting by fitness descending
-            self.population.sort(
-                key=lambda chrom: chrom.fitness_seq_len_regularized(),
-                reverse=True)
+    # evaluating fitness must be adaptive to the number of
+    # features and the size of train/valid dataset
+    def evaluate_fitness(self):
+        # calculating fitness in parallel:
+        # those providers will run their own evolution of provided
+        # data
+        train_data = self.train_data_provider()
+        # train data will try to give the highest score (optimistic)
+        # training data, while the valid one - pessimistic, to make
+        # the task harder (hence to improve generalization)
+        valid_data = self.valid_data_provider()
+        pool = ThreadPool(8)
+        pool.map(self.fitness_fn, self.population)
+
+    def init_population(self):
+        """
+        initializes the population with random chromosomes
+        """
+        pass
+
+    def run(self):
+        self.epoch = 0
+        self.init_population()
+        self.evaluate_fitness()
+        # f.e. number of max epochs exceeded or no improvement since n epochs
+        while self.running_condition(self):
+            print(f"Epoch [{self.epoch + 1}]:", end=' ')
+
+
+
+            # # sorting by fitness descending
+            # self.population.sort(
+            #     key=lambda chrom: chrom.fitness_seq_len_regularized(),
+            #     reverse=True)
             # save better results:
-            for chrom in reversed(self.population):
-                self.save_solution_if_better(chrom)
-            print(f"max_fit: [{self.population[0].fitness:.5f}]", end=' ')
-            print(f"with seq_len of {sum(self.population[0].genes)},", end=' ')
-            print(f"avg_fit: [{self.avg_fit():.5f}]", end=' ')
-            print(f"avg_seq_len: [{self.avg_seq_len():.1f}]")
+            # for chrom in reversed(self.population):
+            #     self.save_solution_if_better(chrom)
+            # print(f"max_fit: [{self.population[0].fitness:.5f}]", end=' ')
+            # print(f"with seq_len of {sum(self.population[0].genes)},", end=' ')
+            # print(f"avg_fit: [{self.avg_fit():.5f}]", end=' ')
+            # print(f"avg_seq_len: [{self.avg_seq_len():.1f}]")
             chernobyl_difference = abs(self.population[0].fitness - self.avg_fit()) < 0.00040
             # elitism causes top elitism_ratio chromosomes to survive
             survived = self.population[:self.elites_surviving]
@@ -86,6 +114,8 @@ class GENerator:
             else:
                 self.perform_mutation(survived, chernobyl=chernobyl_difference)
             self.population = survived
+
+            self.evaluate_fitness()
 
     def perform_mutation(self, population, chernobyl=False):
         """
