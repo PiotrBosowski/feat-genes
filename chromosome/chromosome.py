@@ -19,8 +19,8 @@ class Chromosome:
                 raise
 
     def __str__(self):
-        fitness = self.get_fitness()
-        return f"fit: {f'{fitness:.4f}' if fitness else 'NaN'}, " \
+        fit = self.fitness_value
+        return f"fit: {f'{fit:.4f}' if fit else 'NaN'}, " \
                f"len: [{self.active()}/{self.total()}], " \
                f"{str(self.genes)}"
 
@@ -29,9 +29,6 @@ class Chromosome:
 
     def total(self):
         return len(self.genes)
-
-    def get_fitness(self):
-        return self.fitness_value
 
     def calculate_fitness(self):
         """
