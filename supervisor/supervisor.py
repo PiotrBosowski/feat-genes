@@ -5,6 +5,11 @@ from chromosome.chromosome import Chromosome
 
 
 class Supervisor:
+    """
+    A class that leads the whole evolution process, orchestrating the
+    mainline evolution as well as secondary ones (performed passively
+    by ReverseSupervisors).
+    """
     def __init__(self, genes_count, population_count,
                  fitness, selection, crossover, mutation, cataclysm,
                  train_data_provider, valid_data_provider,
@@ -29,11 +34,11 @@ class Supervisor:
         # calculating fitness in parallel:
         # those providers will run their own evolution of provided
         # data
-        train_data = self.train_data_provider()
+        train_subset = self.train_data_provider.get_data()
         # train data will try to give the highest score (optimistic)
         # training data, while the valid one - pessimistic, to make
         # the task harder (hence to improve generalization)
-        valid_data = self.valid_data_provider()
+        valid_subset = self.valid_data_provider.get_data()
         pool = ThreadPool(8)
         pool.map(self.fitness, self.population)
 
@@ -41,7 +46,7 @@ class Supervisor:
         """
         initializes the population with random chromosomes
         """
-        self.population = [Chromosome(genes_count=self.genes_count)
+        self.population = [Chromosome(self.genes_count)
                            for _ in range(self.population_count)]
 
     def run(self):
