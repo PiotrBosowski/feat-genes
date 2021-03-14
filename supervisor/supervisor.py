@@ -1,4 +1,4 @@
-from multiprocessing.pool import ThreadPool
+import multiprocessing
 
 from chromosome.chromosome import Chromosome
 
@@ -27,20 +27,23 @@ class Supervisor:
         self.valid_data_provider = valid_data_provider
         self.running_condition = running_condition
         self.epoch = 0
-        self.population = [Chromosome(self.genes_count)
-                           for _ in range(self.population_count)]
+        self.population = [Chromosome(self.genes_count, self.fitness)] \
+                          * self.population_count
+
+
 
     def evaluate_fitness(self):
-        # calculating fitness in parallel:
-        # those providers will run their own evolution of provided
-        # data
-        train_subset = self.train_data_provider.step()
-        # train data will try to give the highest score (optimistic)
-        # training data, while the valid one - pessimistic, to make
-        # the task harder (hence to improve generalization)
-        valid_subset = self.valid_data_provider.step()
-        pool = ThreadPool(8)
-        pool.map(self.fitness, self.population)
+        """
+        train_data_provider will try to give the highest score training
+        data, while the valid_data_provider - the hardest possible
+        validation set to make the task more challenging (hence
+        possibly improving generalization).
+        """
+        train_population = self.train_data_provider.step()
+        valid_population = self.valid_data_provider.step()
+        self.fitness(self.population, train_population, valid_population)
+        pool = multiprocessing.Pool(6)
+        pool.starmap(lambda atr, train, valid: atr.fitness())
 
     def run(self):
         self.evaluate_fitness()

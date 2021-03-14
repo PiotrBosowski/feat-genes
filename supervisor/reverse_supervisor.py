@@ -14,10 +14,9 @@ class ReverseSupervisor:
     """
 
     def __init__(self, genes_count, population_count,
-                 fitness, selection, crossover, mutation, cataclysm):
+                 selection, crossover, mutation, cataclysm):
         self.genes_count = genes_count
         self.population_count = population_count
-        self.fitness = fitness
         self.selection = selection
         self.crossover = crossover
         self.mutation = mutation
