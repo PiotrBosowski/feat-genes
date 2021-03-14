@@ -38,9 +38,10 @@ class PassiveSupervisor:
             self.population = self.cataclysm(self.population)
         else:
             survivors = self.selection(self.population)
-            new_population = self.breeding(survivors)
+            new_population = self.breeding(survivors, self.population_count)
             self.population = self.mutation(new_population)
-        return shuffle(self.population)
+        shuffle(self.population)
+        return self.population
 
     def avg_fit(self):
         return sum([chrom.fitness_value for chrom in self.population]) \

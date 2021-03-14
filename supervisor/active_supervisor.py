@@ -3,6 +3,10 @@ import multiprocessing
 from supervisor.passive_supervisor import PassiveSupervisor
 
 
+def lambda_replacement(master, train, valid):
+    master.fitness_function(master, train, valid)
+
+
 class ActiveSupervisor(PassiveSupervisor):
     """
     Former 'Supervisor'.
@@ -34,15 +38,15 @@ class ActiveSupervisor(PassiveSupervisor):
         train_population = self.train_data_provider.step()
         valid_population = self.valid_data_provider.step()
         pool = multiprocessing.Pool(threads_count)
-        asd = pool.starmap(lambda master, train, valid:
-                           master.fitness(train, valid),
-                           zip(self.population, train_population,
-                               valid_population))
+        pool.starmap(lambda_replacement,
+                     list(zip(self.population, train_population,
+                              valid_population)))
 
     def run(self):
         self.evaluate_fitness()
         # f.e. number of max epochs exceeded or no improvement since n epochs
         while self.running_condition(self):
+            print(f"Epoch [{self.epoch + 1}]")
             self.population = self.step()
             self.evaluate_fitness()
 

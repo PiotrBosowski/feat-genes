@@ -39,7 +39,7 @@ def mask_columns(data, mask, verbose=False):
 
 
 def mask_rows(data, mask):
-    return data[mask]
+    return data[list(map(bool, mask))]
 
 
 def get_models_count(data):

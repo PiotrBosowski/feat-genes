@@ -39,11 +39,11 @@ class Chromosome:
     def shuffle(self):
         random.shuffle(self.genes)
 
-    def calculate_fitness(self):
-        """
-        Raises an exception if no fitness_function has been provided.
-        """
-        self.register_fitness(self.fitness_function(self.genes))
+    # def calculate_fitness(self):
+    #     """
+    #     Raises an exception if no fitness_function has been provided.
+    #     """
+    #     self.register_fitness(self.fitness_function(self.genes))
 
     def register_fitness(self, new_fitness):
         self.fitness_value = new_fitness
