@@ -1,34 +1,65 @@
-from fitnesses.xgboost_fitness import XGBoostAcc
-from utils.data_preparation import prepare_data, get_models_count
 from chromosome.chromosome import Chromosome
-from generator.generator import GENerator
+from chromosome.memory_chromosome import MemoryChromosome
+from operations.breedings.adult_breeding import AdultBreeding
+from operations.breedings.breeding import Breeding
+from operations.cataclysms.cataclysm import Cataclysm
+from operations.crossovers.crossover import TwoPointCrossover
+from operations.fitnesses.svm_fitness_aging import SVMaccAging
+from operations.mutations.mutation import Mutation
+from operations.selections.adult_selection import AdultSelection
+from supervisor.passive_supervisor import PassiveSupervisor
+from utils.data_preparation import prepare_data, get_models_count
+from supervisor.active_supervisor import ActiveSupervisor
 
-BINARY_valid_1000 = '/home/peter/covid/datasets/2k-0.5k-rest-BINARY-NEWEST/valid/combined_outputs-2021-02-08_01-30-23_SOURCE_COLUMN.csv'
-BINARY_test_15108 = '/home/peter/covid/datasets/2k-0.5k-rest-BINARY-NEWEST/test/combined_outputs-2021-02-08_01-21-46_SOURCE_COLUMN.csv'
+BINARY_valid_1000 = r'C:\Users\piotr\Desktop\committee_datasets\combined_outputs-2021-02-08_01-30-23_SOURCE_COLUMN_1000.csv'
+BINARY_test_15108 = r'C:\Users\piotr\Desktop\committee_datasets\combined_outputs-2021-02-08_01-21-46_SOURCE_COLUMN_15108.csv'
 # 15108 split between 3000 and 12108:
-BINARY_test_3000 = '/home/peter/covid/datasets/2k-0.5k-rest-BINARY-NEWEST-COMMITTEE/train/combined_outputs_SOURCE_COLUMN.csv'
-BINARY_test_12108 = '/home/peter/covid/datasets/2k-0.5k-rest-BINARY-NEWEST-COMMITTEE/test/combined_outputs_SOURCE_COLUMN.csv'
-
+BINARY_test_3000 = r'C:\Users\piotr\Desktop\committee_datasets\combined_outputs_SOURCE_COLUMN_3000.csv'
+BINARY_test_12108 = r'C:\Users\piotr\Desktop\committee_datasets\combined_outputs_SOURCE_COLUMN_12108.csv'
 
 if __name__ == '__main__':
-    output_path = f'/home/peter/Desktop/Inzynierka/committee_outputs/finalne/results_xgboost_2.txt'
-
     train_X, train_y = prepare_data(BINARY_valid_1000)
     valid_X, valid_y = prepare_data(BINARY_test_3000)
     test_X, test_y = prepare_data(BINARY_test_12108)
 
-    fitness_xgboost = XGBoostAcc(train_X, train_y, valid_X, valid_y)
+    # fitness_xgboost = XGBoostAcc(train_X, train_y, valid_X, valid_y)
 
-    generator = GENerator(genes_count=get_models_count(BINARY_test_3000),
-                          population_count=80,
-                          fitness_fn=fitness_xgboost,
-                          selection_fn=GENerator.selection_fn,
-                          crossover_ratio=0.50,
-                          crossover_fn=Chromosome.crossover_fn,
-                          mutation_ratio=0.05,
-                          elitism_ratio=0.07,
-                          genes_to_mutate=0.07,
-                          chernobyl_every=80,
-                          output_path=f'/home/peter/Desktop/Inzynierka/committee_outputs/finalne/results_xgboost_4.txt',
-                          num_def_siblings=0)
-    generator.run(max_epochs=1000)
+    train_data_provider = PassiveSupervisor(genes_count=len(train_X),
+                                            population_count=100,
+                                            selection=AdultSelection(0.6, 4),
+                                            breeding=AdultBreeding(
+                                                TwoPointCrossover(), 4),
+                                            mutation=Mutation(
+                                                chrom_mut_chance=0.1,
+                                                gen_mut_chance=0.1),
+                                            cataclysm=Cataclysm(),
+                                            chromosome_type=MemoryChromosome)
+
+    valid_data_provider = PassiveSupervisor(genes_count=len(valid_X),
+                                            population_count=100,
+                                            selection=AdultSelection(0.6, 4),
+                                            breeding=AdultBreeding(
+                                                TwoPointCrossover(), 4),
+                                            mutation=Mutation(
+                                                chrom_mut_chance=0.1,
+                                                gen_mut_chance=0.1),
+                                            cataclysm=Cataclysm(),
+                                            chromosome_type=MemoryChromosome)
+
+    generator = ActiveSupervisor(genes_count=get_models_count(train_X),
+                                 population_count=100,
+                                 fitness=SVMaccAging(train_X=train_X,
+                                                     train_y=train_y,
+                                                     valid_X=test_X,
+                                                     valid_y=test_y),
+                                 selection=AdultSelection(0.6, 4),
+                                 breeding=AdultBreeding(TwoPointCrossover(),
+                                                        4),
+                                 mutation=Mutation(chrom_mut_chance=0.1,
+                                                   gen_mut_chance=0.1),
+                                 cataclysm=Cataclysm(),
+                                 train_data_provider=train_data_provider,
+                                 valid_data_provider=valid_data_provider,
+                                 running_condition=lambda: True,
+                                 chromosome_type=MemoryChromosome)
+    generator.run()

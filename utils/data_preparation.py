@@ -38,6 +38,12 @@ def mask_columns(data, mask, verbose=False):
     return data
 
 
-def get_models_count(csv_path):
-    data_X, _, _ = load_data(csv_path)
+def mask_rows(data, mask):
+    return data[mask]
+
+
+def get_models_count(data):
+    if isinstance(data, DataFrame):
+        return len(data.columns)
+    data_X, _, _ = load_data(data)
     return len(data_X.columns)
