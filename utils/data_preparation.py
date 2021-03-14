@@ -38,6 +38,10 @@ def mask_columns(data, mask, verbose=False):
     return data
 
 
+def mask_rows(data, mask):
+    return data[mask]
+
+
 def get_models_count(data):
     if isinstance(data, DataFrame):
         return len(data.columns)
