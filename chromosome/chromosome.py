@@ -36,6 +36,9 @@ class Chromosome:
                f"len: [{self.active()}/{len(self)}], " \
                f"{str(self.genes)}"
 
+    def shuffle(self):
+        random.shuffle(self.genes)
+
     def calculate_fitness(self):
         """
         Raises an exception if no fitness_function has been provided.
