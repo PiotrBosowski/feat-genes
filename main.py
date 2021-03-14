@@ -4,6 +4,7 @@ from operations.breedings.adult_breeding import AdultBreeding
 from operations.breedings.breeding import Breeding
 from operations.cataclysms.cataclysm import Cataclysm
 from operations.crossovers.crossover import TwoPointCrossover
+from operations.fitnesses.svm_fitness_aging import SVMaccAging
 from operations.mutations.mutation import Mutation
 from operations.selections.adult_selection import AdultSelection
 from supervisor.passive_supervisor import PassiveSupervisor
@@ -47,7 +48,10 @@ if __name__ == '__main__':
 
     generator = ActiveSupervisor(genes_count=get_models_count(train_X),
                                  population_count=100,
-                                 fitness=None,
+                                 fitness=SVMaccAging(train_X=train_X,
+                                                     train_y=train_y,
+                                                     valid_X=test_X,
+                                                     valid_y=test_y),
                                  selection=AdultSelection(0.6, 4),
                                  breeding=AdultBreeding(TwoPointCrossover(),
                                                         4),
@@ -58,5 +62,4 @@ if __name__ == '__main__':
                                  valid_data_provider=valid_data_provider,
                                  running_condition=lambda: True,
                                  chromosome_type=MemoryChromosome)
-
     generator.run()
