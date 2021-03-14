@@ -1,6 +1,6 @@
 from fitnesses.xgboost_fitness import XGBoostAcc
+from supervisor.reverse_supervisor import ReverseSupervisor
 from utils.data_preparation import prepare_data, get_models_count
-from chromosome.chromosome import Chromosome
 from supervisor.supervisor import Supervisor
 
 BINARY_valid_1000 = '/home/peter/covid/datasets/2k-0.5k-rest-BINARY-NEWEST/valid/combined_outputs-2021-02-08_01-30-23_SOURCE_COLUMN.csv'
@@ -11,24 +11,35 @@ BINARY_test_12108 = '/home/peter/covid/datasets/2k-0.5k-rest-BINARY-NEWEST-COMMI
 
 
 if __name__ == '__main__':
-    output_path = f'/home/peter/Desktop/Inzynierka/committee_outputs/finalne/results_xgboost_2.txt'
-
     train_X, train_y = prepare_data(BINARY_valid_1000)
     valid_X, valid_y = prepare_data(BINARY_test_3000)
     test_X, test_y = prepare_data(BINARY_test_12108)
 
     fitness_xgboost = XGBoostAcc(train_X, train_y, valid_X, valid_y)
 
-    generator = Supervisor(genes_count=get_models_count(BINARY_test_3000),
-                           population_count=80,
-                           fitness=fitness_xgboost,
-                           selection=Supervisor.selection_fn,
-                           crossover_ratio=0.50,
-                           crossover=Chromosome.crossover_fn,
-                           mutation=0.05,
-                           elitism_ratio=0.07,
-                           genes_to_mutate=0.07,
-                           chernobyl_every=80,
-                           output_path=f'/home/peter/Desktop/Inzynierka/committee_outputs/finalne/results_xgboost_4.txt',
-                           num_def_siblings=0)
-    generator.run(max_epochs=1000)
+    train_data_provider = ReverseSupervisor(genes_count=len(train_X),
+                                            population_count=100,
+                                            selection=None,
+                                            crossover=None,
+                                            mutation=None,
+                                            cataclysm=None)
+
+    valid_data_provider = ReverseSupervisor(genes_count=len(valid_X),
+                                            population_count=100,
+                                            selection=None,
+                                            crossover=None,
+                                            mutation=None,
+                                            cataclysm=None)
+
+    generator = Supervisor(genes_count=get_models_count(train_X),
+                           population_count=100,
+                           fitness=None,
+                           selection=None,
+                           crossover=None,
+                           mutation=None,
+                           cataclysm=None,
+                           train_data_provider=train_data_provider,
+                           valid_data_provider=valid_data_provider,
+                           running_condition=lambda: True)
+
+    generator.run()

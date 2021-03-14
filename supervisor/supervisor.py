@@ -18,7 +18,6 @@ class Supervisor:
                  running_condition):
         self.genes_count = genes_count
         self.population_count = population_count
-        self.fitness = fitness
         self.selection = selection
         self.crossover = crossover
         self.mutation = mutation
@@ -27,10 +26,8 @@ class Supervisor:
         self.valid_data_provider = valid_data_provider
         self.running_condition = running_condition
         self.epoch = 0
-        self.population = [Chromosome(self.genes_count, self.fitness)] \
+        self.population = [Chromosome(self.genes_count, fitness)] \
                           * self.population_count
-
-
 
     def evaluate_fitness(self):
         """
@@ -39,11 +36,12 @@ class Supervisor:
         validation set to make the task more challenging (hence
         possibly improving generalization).
         """
+        threads_count = 1
         train_population = self.train_data_provider.step()
         valid_population = self.valid_data_provider.step()
-        self.fitness(self.population, train_population, valid_population)
-        pool = multiprocessing.Pool(6)
-        pool.starmap(lambda atr, train, valid: atr.fitness())
+        pool = multiprocessing.Pool(threads_count)
+        pool.starmap(lambda master, train, valid: master.fitness(train, valid),
+                     zip(self.population, train_population, valid_population))
 
     def run(self):
         self.evaluate_fitness()
