@@ -22,8 +22,10 @@ class ReverseSupervisor:
         self.mutation = mutation
         self.cataclysm = cataclysm
         self.epoch = 0
-        self.population = [MemoryChromosome(self.genes_count)] \
-                          * self.population_count
+        # self.population = [MemoryChromosome(self.genes_count)] \
+        #                   * self.population_count
+        self.population = [MemoryChromosome(self.genes_count)
+                           for _ in range(self.population_count)]
 
     def step(self):
         """

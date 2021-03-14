@@ -26,8 +26,8 @@ class Supervisor:
         self.valid_data_provider = valid_data_provider
         self.running_condition = running_condition
         self.epoch = 0
-        self.population = [Chromosome(self.genes_count, fitness)] \
-                          * self.population_count
+        self.population = [Chromosome(self.genes_count, fitness)
+                           for _ in range(self.population_count)]
 
     def evaluate_fitness(self):
         """
