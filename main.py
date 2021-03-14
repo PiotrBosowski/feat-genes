@@ -1,3 +1,7 @@
+from chromosome.chromosome import Chromosome
+from chromosome.memory_chromosome import MemoryChromosome
+from operations.breedings.breeding import Breeding
+from operations.crossovers.crossover import TwoPointCrossover
 from supervisor.passive_supervisor import PassiveSupervisor
 from utils.data_preparation import prepare_data, get_models_count
 from supervisor.active_supervisor import ActiveSupervisor
@@ -19,26 +23,29 @@ if __name__ == '__main__':
     train_data_provider = PassiveSupervisor(genes_count=len(train_X),
                                             population_count=100,
                                             selection=None,
-                                            crossover=None,
+                                            breeding=Breeding(TwoPointCrossover()),
                                             mutation=None,
-                                            cataclysm=None)
+                                            cataclysm=None,
+                                            chromosome_type=MemoryChromosome)
 
     valid_data_provider = PassiveSupervisor(genes_count=len(valid_X),
                                             population_count=100,
                                             selection=None,
-                                            crossover=None,
+                                            breeding=Breeding(TwoPointCrossover()),
                                             mutation=None,
-                                            cataclysm=None)
+                                            cataclysm=None,
+                                            chromosome_type=MemoryChromosome)
 
     generator = ActiveSupervisor(genes_count=get_models_count(train_X),
                                  population_count=100,
                                  fitness=None,
                                  selection=None,
-                                 crossover=None,
+                                 breeding=Breeding(TwoPointCrossover()),
                                  mutation=None,
                                  cataclysm=None,
                                  train_data_provider=train_data_provider,
                                  valid_data_provider=valid_data_provider,
-                                 running_condition=lambda: True)
+                                 running_condition=lambda: True,
+                                 chromosome_type=Chromosome)
 
     generator.run()

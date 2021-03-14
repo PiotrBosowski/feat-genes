@@ -1,4 +1,4 @@
-from operations.mutations.mutations import Mutation
+from operations.mutations.mutation import Mutation
 
 
 class Cataclysm:

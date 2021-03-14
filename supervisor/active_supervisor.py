@@ -15,9 +15,9 @@ class ActiveSupervisor(PassiveSupervisor):
     """
 
     def __init__(self, genes_count, population_count, fitness, selection,
-                 crossover, mutation, cataclysm, train_data_provider,
+                 breeding, mutation, cataclysm, train_data_provider,
                  valid_data_provider, running_condition, chromosome_type):
-        super().__init__(genes_count, population_count, selection, crossover,
+        super().__init__(genes_count, population_count, selection, breeding,
                          mutation, cataclysm, chromosome_type, fitness)
         self.train_data_provider = train_data_provider
         self.valid_data_provider = valid_data_provider

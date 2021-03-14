@@ -1,7 +1,5 @@
 from random import shuffle
 
-from chromosome.memory_chromosome import MemoryChromosome
-
 
 class PassiveSupervisor:
     """
@@ -14,12 +12,12 @@ class PassiveSupervisor:
     inheritance hierarchy?
     """
 
-    def __init__(self, genes_count, population_count, selection, crossover,
+    def __init__(self, genes_count, population_count, selection, breeding,
                  mutation, cataclysm, chromosome_type, fitness=None):
         self.genes_count = genes_count
         self.population_count = population_count
         self.selection = selection
-        self.crossover = crossover
+        self.breeding = breeding
         self.mutation = mutation
         self.cataclysm = cataclysm
         self.epoch = 0
@@ -39,8 +37,8 @@ class PassiveSupervisor:
         if self.cataclysm.check(self.population, self.epoch):
             self.population = self.cataclysm(self.population)
         else:
-            selected = self.selection(self.population)
-            new_population = self.crossover(selected)
+            survivors = self.selection(self.population)
+            new_population = self.breeding(survivors)
             self.population = self.mutation(new_population)
         return shuffle(self.population)
 
