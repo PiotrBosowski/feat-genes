@@ -33,7 +33,7 @@ def mutate(self, genes_to_mutate=1, chernobyl=False):
 
     def perform_mutation(self, population, chernobyl=False):
         """
-        mutation - randomly toggling genes (mutation rate ~0.05 means that 5%
+        mutations - randomly toggling genes (mutations rate ~0.05 means that 5%
         of chromosomes will have a random gene toggled)
         """
         if chernobyl:

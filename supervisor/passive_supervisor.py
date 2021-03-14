@@ -3,8 +3,9 @@ from random import shuffle
 from chromosome.memory_chromosome import MemoryChromosome
 
 
-class ReverseSupervisor:
+class PassiveSupervisor:
     """
+    Former 'ReverseSupervisor'.
     The idea of this class is to be a reverse-supervisor of an evolution
     process - it has to maintain its evolution with just callbacks from
     outside and minimal feedback about the results (fitness).
@@ -14,7 +15,7 @@ class ReverseSupervisor:
     """
 
     def __init__(self, genes_count, population_count,
-                 selection, crossover, mutation, cataclysm):
+                 selection, crossover, mutation, cataclysm, chromosome_type):
         self.genes_count = genes_count
         self.population_count = population_count
         self.selection = selection
@@ -22,9 +23,7 @@ class ReverseSupervisor:
         self.mutation = mutation
         self.cataclysm = cataclysm
         self.epoch = 0
-        # self.population = [MemoryChromosome(self.genes_count)] \
-        #                   * self.population_count
-        self.population = [MemoryChromosome(self.genes_count)
+        self.population = [chromosome_type(self.genes_count)
                            for _ in range(self.population_count)]
 
     def step(self):
@@ -37,7 +36,18 @@ class ReverseSupervisor:
         effect' of supervisor's own evolution process.
         """
         self.epoch += 1
-        self.cataclysm()
-        self.crossover()
-        self.mutation()
+        if self.cataclysm.check(self.population, self.epoch):
+            self.population = self.cataclysm(self.population)
+        else:
+            selected = self.selection(self.population)
+            new_population = self.crossover(selected)
+            self.population = self.mutation(new_population)
         return shuffle(self.population)
+
+    def avg_fit(self):
+        return sum([chrom.fitness_value for chrom in self.population]) \
+               / self.population_count
+
+    def avg_len(self):
+        return sum([chrom.active() for chrom in self.population]) \
+               / self.population_count

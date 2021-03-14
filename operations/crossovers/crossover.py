@@ -1,6 +1,12 @@
 import random
 
 
+class TwoPointCrossover:
+
+    def __call__(self, evolvable):
+        population =
+
+
 def two_point_crossover(mom_genes, dad_genes):
     """mothers and fathers genes lengths should be the same"""
     slices = (random.randrange(len(mom_genes)),
@@ -14,8 +20,8 @@ def two_point_crossover(mom_genes, dad_genes):
 
 def crossover_fn(survived, population_count):
     """
-    crossover - swapping part of the chromosome with other (% of children
-    that come from crossover, ~0.5)
+    crossovers - swapping part of the chromosome with other (% of children
+    that come from crossovers, ~0.5)
     """
     offspring = []
     while len(survived) + len(offspring) < population_count:

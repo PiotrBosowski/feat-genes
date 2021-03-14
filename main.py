@@ -1,7 +1,6 @@
-from fitnesses.xgboost_fitness import XGBoostAcc
-from supervisor.reverse_supervisor import ReverseSupervisor
+from supervisor.passive_supervisor import PassiveSupervisor
 from utils.data_preparation import prepare_data, get_models_count
-from supervisor.supervisor import Supervisor
+from supervisor.active_supervisor import ActiveSupervisor
 
 BINARY_valid_1000 = r'C:\Users\piotr\Desktop\committee_datasets\combined_outputs-2021-02-08_01-30-23_SOURCE_COLUMN_1000.csv'
 BINARY_test_15108 = r'C:\Users\piotr\Desktop\committee_datasets\combined_outputs-2021-02-08_01-21-46_SOURCE_COLUMN_15108.csv'
@@ -17,29 +16,29 @@ if __name__ == '__main__':
 
     # fitness_xgboost = XGBoostAcc(train_X, train_y, valid_X, valid_y)
 
-    train_data_provider = ReverseSupervisor(genes_count=len(train_X),
+    train_data_provider = PassiveSupervisor(genes_count=len(train_X),
                                             population_count=100,
                                             selection=None,
                                             crossover=None,
                                             mutation=None,
                                             cataclysm=None)
 
-    valid_data_provider = ReverseSupervisor(genes_count=len(valid_X),
+    valid_data_provider = PassiveSupervisor(genes_count=len(valid_X),
                                             population_count=100,
                                             selection=None,
                                             crossover=None,
                                             mutation=None,
                                             cataclysm=None)
 
-    generator = Supervisor(genes_count=get_models_count(train_X),
-                           population_count=100,
-                           fitness=None,
-                           selection=None,
-                           crossover=None,
-                           mutation=None,
-                           cataclysm=None,
-                           train_data_provider=train_data_provider,
-                           valid_data_provider=valid_data_provider,
-                           running_condition=lambda: True)
+    generator = ActiveSupervisor(genes_count=get_models_count(train_X),
+                                 population_count=100,
+                                 fitness=None,
+                                 selection=None,
+                                 crossover=None,
+                                 mutation=None,
+                                 cataclysm=None,
+                                 train_data_provider=train_data_provider,
+                                 valid_data_provider=valid_data_provider,
+                                 running_condition=lambda: True)
 
     generator.run()
