@@ -31,6 +31,7 @@ class SVMaccAging:
         classifier.fit(train_X, train_y.values.ravel())
         pred_y = classifier.predict(valid_X)
         fitness = metrics.accuracy_score(valid_y, pred_y)
+        print(fitness)
         master_chrom.register_fitness(fitness)
         train_chrom.register_fitness(fitness)
         valid_chrom.register_fitness(fitness)

@@ -1,7 +1,5 @@
-from chromosome.chromosome import Chromosome
 from chromosome.memory_chromosome import MemoryChromosome
 from operations.breedings.adult_breeding import AdultBreeding
-from operations.breedings.breeding import Breeding
 from operations.cataclysms.cataclysm import Cataclysm
 from operations.crossovers.crossover import TwoPointCrossover
 from operations.fitnesses.svm_fitness_aging import SVMaccAging
@@ -50,8 +48,8 @@ if __name__ == '__main__':
                                  population_count=100,
                                  fitness=SVMaccAging(train_X=train_X,
                                                      train_y=train_y,
-                                                     valid_X=test_X,
-                                                     valid_y=test_y),
+                                                     valid_X=valid_X,
+                                                     valid_y=valid_y),
                                  selection=AdultSelection(0.6, 4),
                                  breeding=AdultBreeding(TwoPointCrossover(),
                                                         4),
@@ -60,6 +58,6 @@ if __name__ == '__main__':
                                  cataclysm=Cataclysm(),
                                  train_data_provider=train_data_provider,
                                  valid_data_provider=valid_data_provider,
-                                 running_condition=lambda: True,
+                                 running_condition=lambda _: True,
                                  chromosome_type=MemoryChromosome)
     generator.run()

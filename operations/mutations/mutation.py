@@ -16,3 +16,4 @@ class Mutation:
                 round(self.gen_mut_chance * len(chrom)))
             for gt in genes_to_mutate:
                 chrom[gt] = int(not bool(chrom[gt]))
+        return population

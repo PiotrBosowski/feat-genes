@@ -7,7 +7,7 @@ class AdultBreeding:
         self.crossover = crossover
         self.maturity_age = maturity_age
 
-    def breeding(self, survivors, desired_size):
+    def __call__(self, survivors, desired_size):
         offspring = []
         adults = [s for s in survivors if s.age > self.maturity_age]
         while len(survivors) + len(offspring) < desired_size and adults:
