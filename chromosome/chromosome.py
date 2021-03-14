@@ -18,17 +18,23 @@ class Chromosome:
             except RuntimeError:
                 raise
 
-    def __str__(self):
-        fit = self.fitness_value
-        return f"fit: {f'{fit:.4f}' if fit else 'NaN'}, " \
-               f"len: [{self.active()}/{self.total()}], " \
-               f"{str(self.genes)}"
-
     def active(self):
         return sum(self.genes)
 
-    def total(self):
+    def __len__(self):
         return len(self.genes)
+
+    def __getitem__(self, index):
+        return self.genes[index]
+
+    def __setitem__(self, key, value):
+        self.genes[key] = value
+
+    def __str__(self):
+        fit = self.fitness_value
+        return f"fit: {f'{fit:.4f}' if fit else 'NaN'}, " \
+               f"len: [{self.active()}/{len(self)}], " \
+               f"{str(self.genes)}"
 
     def calculate_fitness(self):
         """

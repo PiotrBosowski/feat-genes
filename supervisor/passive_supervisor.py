@@ -14,8 +14,8 @@ class PassiveSupervisor:
     inheritance hierarchy?
     """
 
-    def __init__(self, genes_count, population_count,
-                 selection, crossover, mutation, cataclysm, chromosome_type):
+    def __init__(self, genes_count, population_count, selection, crossover,
+                 mutation, cataclysm, chromosome_type, fitness=None):
         self.genes_count = genes_count
         self.population_count = population_count
         self.selection = selection
@@ -23,7 +23,7 @@ class PassiveSupervisor:
         self.mutation = mutation
         self.cataclysm = cataclysm
         self.epoch = 0
-        self.population = [chromosome_type(self.genes_count)
+        self.population = [chromosome_type(self.genes_count, fitness)
                            for _ in range(self.population_count)]
 
     def step(self):

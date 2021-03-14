@@ -14,12 +14,11 @@ class ActiveSupervisor(PassiveSupervisor):
     the size of train/valid dataset.
     """
 
-    def __init__(self, genes_count, population_count,
-                 fitness, selection, crossover, mutation, cataclysm,
-                 train_data_provider, valid_data_provider,
-                 running_condition, chromosome_type):
+    def __init__(self, genes_count, population_count, fitness, selection,
+                 crossover, mutation, cataclysm, train_data_provider,
+                 valid_data_provider, running_condition, chromosome_type):
         super().__init__(genes_count, population_count, selection, crossover,
-                         mutation, cataclysm, chromosome_type)
+                         mutation, cataclysm, chromosome_type, fitness)
         self.train_data_provider = train_data_provider
         self.valid_data_provider = valid_data_provider
         self.running_condition = running_condition
