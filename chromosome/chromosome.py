@@ -39,7 +39,7 @@ class Chromosome:
     def shuffle(self):
         random.shuffle(self.genes)
 
-    # def calculate_fitness(self):
+    # def calculate_fitness(self, *args):
     #     """
     #     Raises an exception if no fitness_function has been provided.
     #     """
