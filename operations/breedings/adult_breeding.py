@@ -18,5 +18,5 @@ class AdultBreeding:
                 father = copy.deepcopy(mother)
                 father.shuffle()
             children = self.crossover(mother, father)
-            offspring.extend(children)
+            offspring.append(children)
         return survivors + offspring

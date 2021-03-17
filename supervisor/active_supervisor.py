@@ -3,8 +3,9 @@ import multiprocessing
 from supervisor.passive_supervisor import PassiveSupervisor
 
 
-def lambda_replacement(master, train, valid):
-    master.fitness_function(master, train, valid)
+def lambda_replacement(tup):
+    master, train, valid = tup
+    master.calculate_fitness(master, train, valid)
 
 
 class ActiveSupervisor(PassiveSupervisor):
@@ -26,6 +27,7 @@ class ActiveSupervisor(PassiveSupervisor):
         self.train_data_provider = train_data_provider
         self.valid_data_provider = valid_data_provider
         self.running_condition = running_condition
+        self.chromosome_type = chromosome_type
 
     def evaluate_fitness(self):
         """
@@ -38,9 +40,10 @@ class ActiveSupervisor(PassiveSupervisor):
         train_population = self.train_data_provider.step()
         valid_population = self.valid_data_provider.step()
         pool = multiprocessing.Pool(threads_count)
-        pool.starmap(lambda_replacement,
+        list(map(lambda_replacement,
                      list(zip(self.population, train_population,
-                              valid_population)))
+                              valid_population))))
+        liczba = 1
 
     def run(self):
         self.evaluate_fitness()
@@ -49,6 +52,13 @@ class ActiveSupervisor(PassiveSupervisor):
             print(f"Epoch [{self.epoch + 1}]")
             self.population = self.step()
             self.evaluate_fitness()
+            # validation part
+            master = self.get_best()
+            train = self.train_data_provider.get_best()
+            valid = self.valid_data_provider.get_complete()
+            print("Best fitness atm:", master.fitness_function(master,
+                                                               train,
+                                                               valid))
 
     # def save_solution_if_better(self, chrom):
     #     # if better fit or shorter sequence

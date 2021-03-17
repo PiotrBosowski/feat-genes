@@ -1,3 +1,4 @@
+import copy
 from random import shuffle
 
 
@@ -50,3 +51,12 @@ class PassiveSupervisor:
     def avg_len(self):
         return sum([chrom.active() for chrom in self.population]) \
                / self.population_count
+
+    def get_best(self):
+        return sorted(self.population,
+                      key=lambda chrom: chrom.fitness_value)[-1]
+
+    def get_complete(self):
+        ones = copy.deepcopy(self.population[0])
+        ones.genes = [1] * len(ones.genes)
+        return ones
