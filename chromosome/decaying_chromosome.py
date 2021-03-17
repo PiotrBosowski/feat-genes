@@ -1,0 +1,30 @@
+from chromosome.chromosome import Chromosome
+
+
+class DecayingChromosome(Chromosome):
+    """
+    Type of Chromosome that remembers his previous scores, able to
+    calculate its fitness' moving average.
+    """
+    # number of fitness records to be considered
+    history_length = 4
+
+    def __init__(self, genes, fitness_function=None, random_init=True):
+        super().__init__(genes, fitness_function, random_init)
+        self.age = 0
+        self.history = []
+
+    def register_fitness(self, new_fitness):
+        """
+        It would probably be better not to keep all previous fitnesses,
+        but just the moving average and number of items (since it is
+        sufficient for calculating next avg. fit. for new fit. measur.)
+        """
+        self.history.insert(0, new_fitness)
+        self.history = self.history[0:DecayingChromosome.history_length]
+        length = len(self.history)
+        weights = [(2 * (length - i)) / (length * (length + 1))
+                   for i in range(length)]
+        self.fitness_value = sum([h * weights[i]
+                                  for i, h in enumerate(self.history)])
+        self.age += 1
