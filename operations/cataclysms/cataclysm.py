@@ -6,7 +6,7 @@ class Cataclysm:
         pass
 
     def check(self, population, epochs):
-        return not epochs % 1000
+        return not epochs % 10000
 
     def __call__(self, population):
         mutator = Mutation(chrom_mut_chance=0.75, gen_mut_chance=0.3)

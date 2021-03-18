@@ -28,3 +28,13 @@ class DecayingChromosome(Chromosome):
         self.fitness_value = sum([h * weights[i]
                                   for i, h in enumerate(self.history)])
         self.age += 1
+
+    def calculate_fitness(self, master, train, valid):
+        fitness = self.fitness_function(master, train, valid)
+        master.register_fitness(fitness)
+        train.register_fitness(fitness)
+        valid.register_fitness(-fitness)  # we want valid set to be tough
+
+    @staticmethod
+    def calculate_fitness_wrapper(master, train, valid):
+        master.calculate_fitness(master, train, valid)
