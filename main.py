@@ -1,5 +1,4 @@
 from chromosome.decaying_chromosome import DecayingChromosome
-from chromosome.memory_chromosome import MemoryChromosome
 from operations.breedings.adult_breeding import AdultBreeding
 from operations.cataclysms.cataclysm import Cataclysm
 from operations.crossovers.crossover import TwoPointCrossover
@@ -10,11 +9,19 @@ from supervisor.passive_supervisor import PassiveSupervisor
 from utils.data_preparation import prepare_data, get_models_count
 from supervisor.active_supervisor import ActiveSupervisor
 
-BINARY_valid_1000 = r'/home/peter/media/c/Users/piotr/Desktop/committee_datasets/combined_outputs-2021-02-08_01-30-23_SOURCE_COLUMN_1000.csv'
-BINARY_test_15108 = r'/home/peter/media/c/Users/piotr/Desktop/committee_datasets/combined_outputs-2021-02-08_01-21-46_SOURCE_COLUMN_15108.csv'
+#ubuntu:
+# BINARY_valid_1000 = r'/home/peter/media/c/Users/piotr/Desktop/committee_datasets/combined_outputs-2021-02-08_01-30-23_SOURCE_COLUMN_1000.csv'
+# BINARY_test_15108 = r'/home/peter/media/c/Users/piotr/Desktop/committee_datasets/combined_outputs-2021-02-08_01-21-46_SOURCE_COLUMN_15108.csv'
+# # 15108 split between 3000 and 12108:
+# BINARY_test_3000 = r'/home/peter/media/c/Users/piotr/Desktop/committee_datasets/combined_outputs_SOURCE_COLUMN_3000.csv'
+# BINARY_test_12108 = r'/home/peter/media/c/Users/piotr/Desktop/committee_datasets/combined_outputs_SOURCE_COLUMN_12108.csv'
+
+#windows:
+BINARY_valid_1000 = r'C:\Users\piotr\Desktop\covid-19\committee_datasets\combined_outputs-2021-02-08_01-30-23_SOURCE_COLUMN_1000.csv'
+BINARY_test_15108 = r'C:\Users\piotr\Desktop\covid-19\committee_datasets\combined_outputs-2021-02-08_01-21-46_SOURCE_COLUMN_15108.csv'
 # 15108 split between 3000 and 12108:
-BINARY_test_3000 = r'/home/peter/media/c/Users/piotr/Desktop/committee_datasets/combined_outputs_SOURCE_COLUMN_3000.csv'
-BINARY_test_12108 = r'/home/peter/media/c/Users/piotr/Desktop/committee_datasets/combined_outputs_SOURCE_COLUMN_12108.csv'
+BINARY_test_3000 = r'C:\Users\piotr\Desktop\covid-19\committee_datasets\combined_outputs_SOURCE_COLUMN_3000.csv'
+BINARY_test_12108 = r'C:\Users\piotr\Desktop\covid-19\committee_datasets\combined_outputs_SOURCE_COLUMN_12108.csv'
 
 if __name__ == '__main__':
     train_X, train_y = prepare_data(BINARY_valid_1000)

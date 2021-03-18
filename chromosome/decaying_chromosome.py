@@ -9,8 +9,8 @@ class DecayingChromosome(Chromosome):
     # number of fitness records to be considered
     history_length = 4
 
-    def __init__(self, genes, fitness_function=None, random_init=True):
-        super().__init__(genes, fitness_function, random_init)
+    def __init__(self, total_genes, fitness_function=None):
+        super().__init__(total_genes, fitness_function)
         self.age = 0
         self.history = []
 
