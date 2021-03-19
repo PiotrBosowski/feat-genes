@@ -55,10 +55,11 @@ class PassiveSupervisor:
 
     def avg_len(self):
         return sum([chrom.active() for chrom in self.population]) \
-               / self.population_count
+               / (self.population_count * self.genes_count)
 
     def stdev_len(self):
-        return stdev([len(chrom) for chrom in self.population])
+        return stdev([chrom.active() for chrom in self.population]) \
+               / self.genes_count
 
     def get_best(self):
         return sorted(self.population,

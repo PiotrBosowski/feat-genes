@@ -31,7 +31,7 @@ if __name__ == '__main__':
     # fitness_xgboost = XGBoostAcc(train_X, train_y, valid_X, valid_y)
 
     train_data_provider = PassiveSupervisor(genes_count=len(train_X),
-                                            population_count=400,
+                                            population_count=100,
                                             selection=AdultSelection(0.6, 7),
                                             breeding=AdultBreeding(
                                                 TwoPointCrossover(), 7),
@@ -42,7 +42,7 @@ if __name__ == '__main__':
                                             chromosome_type=DecayingChromosome)
 
     valid_data_provider = PassiveSupervisor(genes_count=len(valid_X),
-                                            population_count=400,
+                                            population_count=100,
                                             selection=AdultSelection(0.6, 7),
                                             breeding=AdultBreeding(
                                                 TwoPointCrossover(), 7),
@@ -53,7 +53,7 @@ if __name__ == '__main__':
                                             chromosome_type=DecayingChromosome)
 
     generator = ActiveSupervisor(genes_count=get_models_count(train_X),
-                                 population_count=400,
+                                 population_count=100,
                                  fitness=SVMaccAging(train_X=train_X,
                                                      train_y=train_y,
                                                      valid_X=valid_X,

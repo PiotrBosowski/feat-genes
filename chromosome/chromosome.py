@@ -10,8 +10,7 @@ class Chromosome:
         self.fitness_function = fitness_function
         self.fitness_value = None
         active_genes = random.uniform(0, total_genes)
-        self.genes = [1 for i in range(total_genes)
-                      if i < active_genes]
+        self.genes = [1 if i < active_genes else 0 for i in range(total_genes)]
         random.shuffle(self.genes)
 
     def active(self):
