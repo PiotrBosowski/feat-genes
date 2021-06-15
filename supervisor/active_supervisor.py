@@ -75,8 +75,8 @@ class ActiveSupervisor(PassiveSupervisor):
                   f"+/-{100*self.valid_data_provider.stdev_len():.2f}%>")
             if current > ActiveSupervisor.current_best:
                 ActiveSupervisor.current_best = current
-                with open('results.txt', 'w') as file:
-                    file.write(str(current))
+                with open('results.txt', 'a') as file:
+                    file.write(f"{current}\n{master.genes}\n{train.genes}\n")
 
 
     # def save_solution_if_better(self, chrom):
