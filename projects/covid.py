@@ -1,5 +1,4 @@
 from pandas import read_csv, DataFrame
-from sklearn.preprocessing import StandardScaler
 
 from utils.data_preparation import mask_columns
 
@@ -10,6 +9,7 @@ def prepare_data(data_path, mask=None, verbose=False, get_data=False):
     if get_data:
         return data_X, data_y, data
     return data_X, data_y
+
 
 def get_models_count(data):
     if isinstance(data, DataFrame):

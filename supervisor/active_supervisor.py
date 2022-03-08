@@ -41,10 +41,12 @@ class ActiveSupervisor(PassiveSupervisor):
         train_population = self.train_data_provider.step()
         valid_population = self.valid_data_provider.step()
         pool = multiprocessing.Pool(threads_count)
+        # print("starting parallel processing...", end=' ')
         fitnesses = list(pool.starmap(lambda_replacement,
                                       list(zip(self.population,
                                                train_population,
                                                valid_population))))
+        # print("done.")
         for ind, fitness in enumerate(fitnesses):
             self.population[ind].register_fitness(fitness)
             train_population[ind].register_fitness(fitness)
