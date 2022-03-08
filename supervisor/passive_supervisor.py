@@ -1,5 +1,7 @@
 import copy
+from statistics import stdev
 from random import shuffle
+
 
 
 class PassiveSupervisor:
@@ -48,9 +50,16 @@ class PassiveSupervisor:
         return sum([chrom.fitness_value for chrom in self.population]) \
                / self.population_count
 
+    def stdev_fit(self):
+        return stdev([chrom.fitness_value for chrom in self.population])
+
     def avg_len(self):
         return sum([chrom.active() for chrom in self.population]) \
-               / self.population_count
+               / (self.population_count * self.genes_count)
+
+    def stdev_len(self):
+        return stdev([chrom.active() for chrom in self.population]) \
+               / self.genes_count
 
     def get_best(self):
         return sorted(self.population,

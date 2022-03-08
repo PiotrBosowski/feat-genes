@@ -5,9 +5,11 @@ from utils.plotting import valid_test_acc_curves
 from utils.results import get_metrics, get_avg_metrics
 
 
-def train_svm(kernel, train_X, train_y, valid_X, valid_y, test_X, test_y, mask=None):
+def train_svm(kernel, train_X, train_y, valid_X, valid_y, test_X, test_y, mask=None, train_mask=None):
     if mask:
         train_X = mask_columns(train_X, mask)
+        train_X = train_X[[bool(i) for i in train_mask]]
+        train_y = train_y[[bool(i) for i in train_mask]]
         valid_X = mask_columns(valid_X, mask)
         test_X = mask_columns(test_X, mask)
     classifier = svm.SVC(kernel=kernel)
@@ -53,3 +55,5 @@ def train_svm_repeatedly(kernel, train_X, train_y, valid_X, valid_y, test_X,
     get_avg_metrics(train_metrics)
     get_avg_metrics(valid_metrics)
     get_avg_metrics(test_metrics)
+
+

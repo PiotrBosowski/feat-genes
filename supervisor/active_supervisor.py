@@ -69,14 +69,21 @@ class ActiveSupervisor(PassiveSupervisor):
             print(f"FIT: [{current:.4f}], "
                   f"master:[{master.fitness_value:.4f}]"
                   f"<avg.len: {100 * self.avg_len() / len(master):.2f}%>, "
+                  f"<len: ~{100*self.avg_len():.2f}% "
+                  f"+/-{100*self.stdev_len():.2f}%>, "
                   f"train:[{train.fitness_value:.4f}]"
                   f"<avg.len: {100 * self.train_data_provider.avg_len() / len(train):.2f}%>, "
+                  f"<len: ~{100*self.train_data_provider.avg_len():.2f}% "
+                  f"+/-{100*self.train_data_provider.stdev_len():.2f}%>, "
                   f"valid:[{valid.fitness_value:.4f}]"
-                  f"<avg.len: {100 * self.valid_data_provider.avg_len() / len(valid):.2f}%>")
+                  f"<avg.len: {100 * self.valid_data_provider.avg_len() / len(valid):.2f}%>"
+                  f"<len: ~{100*self.valid_data_provider.avg_len():.2f}% "
+                  f"+/-{100*self.valid_data_provider.stdev_len():.2f}%>")
             if current > ActiveSupervisor.current_best:
                 ActiveSupervisor.current_best = current
-                with open('results.txt', 'w') as file:
-                    file.write(str(current))
+                with open('results.txt', 'a') as file:
+                    file.write(f"{current}\n{master.genes}\n{train.genes}\n")
+
 
     # def save_solution_if_better(self, chrom):
     #     # if better fit or shorter sequence

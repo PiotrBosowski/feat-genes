@@ -6,17 +6,12 @@ class Chromosome:
     Class that represents a regular chromosome in a genetic algorithm.
     It is a single solution to the problem being optimized.
     """
-    def __init__(self, genes, fitness_function=None, random_init=True):
+    def __init__(self, total_genes, fitness_function=None):
         self.fitness_function = fitness_function
         self.fitness_value = None
-        if isinstance(genes, int):
-            self.genes = random.choices([0, 1], k=genes) \
-                if random_init else [0] * genes
-        else:
-            try:
-                self.genes = [int(c) for c in genes]
-            except RuntimeError:
-                raise
+        active_genes = random.uniform(0, total_genes)
+        self.genes = [1 if i < active_genes else 0 for i in range(total_genes)]
+        random.shuffle(self.genes)
 
     def active(self):
         return sum(self.genes)
