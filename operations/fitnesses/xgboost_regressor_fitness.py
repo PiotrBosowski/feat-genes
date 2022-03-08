@@ -5,7 +5,7 @@ from chromosome.chromosome import Chromosome
 from utils.data_preparation import mask_columns, mask_rows
 
 
-class XGBoostAcc:
+class XGBoostRegressorR2:
     def __init__(self, train_X, train_y, valid_X, valid_y):
         self.train_X = train_X
         self.train_y = train_y
@@ -22,13 +22,12 @@ class XGBoostAcc:
         train_y = mask_rows(self.train_y, train_chrom.genes)
         valid_X = mask_rows(valid_X, valid_chrom.genes)
         valid_y = mask_rows(self.valid_y, valid_chrom.genes)
-        classifier = xgboost.XGBClassifier(objective="binary:logistic",
-                                           tree_method='gpu_hist',
-                                           predictor='gpu_predictor')
+        classifier = xgboost.XGBRegressor(tree_method='gpu_hist',
+                                          predictor='gpu_predictor')
         classifier.learning_rate = 0.01
         classifier.n_estimators = 350
         classifier.subsample = 0.3
         classifier.fit(train_X, train_y.values.ravel())
         pred_y = classifier.predict(valid_X)
-        fitness = metrics.accuracy_score(valid_y, pred_y)
+        fitness = metrics.r2_score(valid_y, pred_y)
         return fitness
