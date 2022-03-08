@@ -4,8 +4,7 @@ from supervisor.passive_supervisor import PassiveSupervisor
 
 
 def lambda_replacement(master, train, valid):
-    # master, train, valid = tup
-    master.calculate_fitness(master, train, valid)
+    return master.calculate_fitness(master, train, valid)
 
 
 class ActiveSupervisor(PassiveSupervisor):
@@ -38,16 +37,18 @@ class ActiveSupervisor(PassiveSupervisor):
         validation set to make the task more challenging (hence
         possibly improving generalization).
         """
-        threads_count = 4
+        threads_count = 16
         train_population = self.train_data_provider.step()
         valid_population = self.valid_data_provider.step()
         pool = multiprocessing.Pool(threads_count)
-        # list(map(lambda_replacement,
-        #          list(zip(self.population, train_population,
-        #                   valid_population))))
-        pool.starmap(lambda_replacement,  # todo: fix this multithreading goddamn
-                     list(zip(self.population, train_population,
-                          valid_population)))
+        fitnesses = list(pool.starmap(lambda_replacement,
+                                      list(zip(self.population,
+                                               train_population,
+                                               valid_population))))
+        for ind, fitness in enumerate(fitnesses):
+            self.population[ind].register_fitness(fitness)
+            train_population[ind].register_fitness(fitness)
+            valid_population[ind].register_fitness(-fitness)
         liczba = 1
 
     def run(self):
@@ -65,16 +66,15 @@ class ActiveSupervisor(PassiveSupervisor):
             current = master.fitness_function(master, train, complete)
             print(f"FIT: [{current:.4f}], "
                   f"master:[{master.fitness_value:.4f}]"
-                  f"<avg.len: {100*self.avg_len()/len(master):.2f}%>, "
+                  f"<avg.len: {100 * self.avg_len() / len(master):.2f}%>, "
                   f"train:[{train.fitness_value:.4f}]"
-                  f"<avg.len: {100*self.train_data_provider.avg_len()/len(train):.2f}%>, "
+                  f"<avg.len: {100 * self.train_data_provider.avg_len() / len(train):.2f}%>, "
                   f"valid:[{valid.fitness_value:.4f}]"
-                  f"<avg.len: {100*self.valid_data_provider.avg_len()/len(valid):.2f}%>")
+                  f"<avg.len: {100 * self.valid_data_provider.avg_len() / len(valid):.2f}%>")
             if current > ActiveSupervisor.current_best:
                 ActiveSupervisor.current_best = current
                 with open('results.txt', 'w') as file:
                     file.write(str(current))
-
 
     # def save_solution_if_better(self, chrom):
     #     # if better fit or shorter sequence

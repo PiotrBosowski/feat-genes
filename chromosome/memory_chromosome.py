@@ -25,9 +25,10 @@ class MemoryChromosome(Chromosome):
 
     def calculate_fitness(self, master, train, valid):
         fitness = self.fitness_function(master, train, valid)
-        master.register_fitness(fitness)
-        train.register_fitness(fitness)
-        valid.register_fitness(-fitness)
+        # master.register_fitness(fitness)
+        # train.register_fitness(fitness)
+        # valid.register_fitness(-fitness)
+        return fitness
 
     @staticmethod
     def calculate_fitness_wrapper(master, train, valid):
