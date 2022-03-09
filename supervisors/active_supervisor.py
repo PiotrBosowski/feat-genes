@@ -1,7 +1,7 @@
 import multiprocessing
 import tqdm
 
-from supervisor.passive_supervisor import PassiveSupervisor
+from supervisors.passive_supervisor import PassiveSupervisor
 
 
 def lambda_replacement(tup):  # master, train, valid):

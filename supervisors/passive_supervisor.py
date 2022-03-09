@@ -7,7 +7,7 @@ from random import shuffle
 class PassiveSupervisor:
     """
     Former 'ReverseSupervisor'.
-    The idea of this class is to be a reverse-supervisor of an evolution
+    The idea of this class is to be a reverse-supervisors of an evolution
     process - it has to maintain its evolution with just callbacks from
     outside and minimal feedback about the results (fitness).
 
@@ -32,9 +32,9 @@ class PassiveSupervisor:
         Mirror of a Supervisor.run() function. We assume that fitnesses
         of the population are already calculated when entering the func.
 
-        :return: Returning the population - supervisor will calculate
+        :return: Returning the population - supervisors will calculate
         and register (in each chromosome) its fitnesses as a 'side
-        effect' of supervisor's own evolution process.
+        effect' of supervisors's own evolution process.
         """
         self.epoch += 1
         if self.cataclysm.check(self.population, self.epoch):

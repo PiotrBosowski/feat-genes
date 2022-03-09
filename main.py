@@ -14,8 +14,8 @@ from operations.mutations.mutation import Mutation
 from operations.selections.adult_selection import AdultSelection
 from projects.covid import get_models_count
 from projects.potatoes import load_potato_data
-from supervisor.passive_supervisor import PassiveSupervisor
-from supervisor.active_supervisor import ActiveSupervisor
+from supervisors.passive_supervisor import PassiveSupervisor
+from supervisors.active_supervisor import ActiveSupervisor
 
 
 if __name__ == '__main__':
