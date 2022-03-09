@@ -1,15 +1,22 @@
+import warnings
+
+from pandas.errors import PerformanceWarning
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
+warnings.simplefilter(action='ignore', category=PerformanceWarning)
+
 from chromosome.decaying_chromosome import DecayingChromosome
 from operations.breedings.adult_breeding import AdultBreeding
 from operations.cataclysms.cataclysm import Cataclysm
 from operations.crossovers.crossover import TwoPointCrossover
-from operations.fitnesses.svm_fitness_aging import SVMaccAging
 from operations.fitnesses.xgboost_regressor_fitness import XGBoostRegressorR2
 from operations.mutations.mutation import Mutation
 from operations.selections.adult_selection import AdultSelection
-from projects.covid import prepare_data, get_models_count
+from projects.covid import get_models_count
 from projects.potatoes import load_potato_data
 from supervisor.passive_supervisor import PassiveSupervisor
 from supervisor.active_supervisor import ActiveSupervisor
+
 
 if __name__ == '__main__':
     test_X, test_y, train_X, train_y, \

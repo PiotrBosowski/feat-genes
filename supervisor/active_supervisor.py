@@ -1,10 +1,17 @@
 import multiprocessing
+import tqdm
 
 from supervisor.passive_supervisor import PassiveSupervisor
 
 
-def lambda_replacement(master, train, valid):
-    return master.calculate_fitness(master, train, valid)
+def lambda_replacement(tup):  # master, train, valid):
+    master, train, valid = tup
+    try:
+        # print(f"Processing chromosome no. {id(master)}")
+        return master.calculate_fitness(master, train, valid)
+    except Exception as ex:
+        print(f"Error while processing chromosome no. {id(master)}")
+        return None
 
 
 class ActiveSupervisor(PassiveSupervisor):
@@ -37,15 +44,21 @@ class ActiveSupervisor(PassiveSupervisor):
         validation set to make the task more challenging (hence
         possibly improving generalization).
         """
-        threads_count = 16
+        threads_count = 32
         train_population = self.train_data_provider.step()
         valid_population = self.valid_data_provider.step()
-        pool = multiprocessing.Pool(threads_count)
+        # pool = multiprocessing.Pool(threads_count)
         # print("starting parallel processing...", end=' ')
-        fitnesses = list(pool.starmap(lambda_replacement,
-                                      list(zip(self.population,
-                                               train_population,
-                                               valid_population))))
+        # fitnesses = pool.starmap(lambda_replacement,
+        #                          list(zip(self.population,
+        #                                   train_population,
+        #                                   valid_population)))
+        fitnesses = list(map(lambda_replacement,
+                             tqdm.tqdm(list(zip(self.population,
+                                                train_population,
+                                                valid_population)))))
+        # pool.close()
+        # pool.join()
         # print("done.")
         for ind, fitness in enumerate(fitnesses):
             self.population[ind].register_fitness(fitness)
@@ -68,22 +81,21 @@ class ActiveSupervisor(PassiveSupervisor):
             current = master.fitness_function(master, train, complete)
             print(f"FIT: [{current:.4f}], "
                   f"master:[{master.fitness_value:.4f}]"
-                  f"<avg.len: {100 * self.avg_len() / len(master):.2f}%>, "
-                  f"<len: ~{100*self.avg_len():.2f}% "
-                  f"+/-{100*self.stdev_len():.2f}%>, "
+                  # f"<avg.len: {100 * self.avg_len() / len(master):.2f}%>, "
+                  f"<len: ~{100 * self.avg_len():.2f}% "
+                  f"+/-{100 * self.stdev_len():.2f}%>, "
                   f"train:[{train.fitness_value:.4f}]"
-                  f"<avg.len: {100 * self.train_data_provider.avg_len() / len(train):.2f}%>, "
-                  f"<len: ~{100*self.train_data_provider.avg_len():.2f}% "
-                  f"+/-{100*self.train_data_provider.stdev_len():.2f}%>, "
+                  # f"<avg.len: {100 * self.train_data_provider.avg_len() / len(train):.2f}%>, "
+                  f"<len: ~{100 * self.train_data_provider.avg_len():.2f}% "
+                  f"+/-{100 * self.train_data_provider.stdev_len():.2f}%>, "
                   f"valid:[{valid.fitness_value:.4f}]"
-                  f"<avg.len: {100 * self.valid_data_provider.avg_len() / len(valid):.2f}%>"
-                  f"<len: ~{100*self.valid_data_provider.avg_len():.2f}% "
-                  f"+/-{100*self.valid_data_provider.stdev_len():.2f}%>")
+                  # f"<avg.len: {100 * self.valid_data_provider.avg_len() / len(valid):.2f}%>"
+                  f"<len: ~{100 * self.valid_data_provider.avg_len():.2f}% "
+                  f"+/-{100 * self.valid_data_provider.stdev_len():.2f}%>")
             if current > ActiveSupervisor.current_best:
                 ActiveSupervisor.current_best = current
                 with open('results.txt', 'a') as file:
                     file.write(f"{current}\n{master.genes}\n{train.genes}\n")
-
 
     # def save_solution_if_better(self, chrom):
     #     # if better fit or shorter sequence

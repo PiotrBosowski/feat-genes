@@ -22,12 +22,18 @@ class XGBoostRegressorR2:
         train_y = mask_rows(self.train_y, train_chrom.genes)
         valid_X = mask_rows(valid_X, valid_chrom.genes)
         valid_y = mask_rows(self.valid_y, valid_chrom.genes)
-        classifier = xgboost.XGBRegressor(tree_method='gpu_hist',
-                                          predictor='gpu_predictor')
-        classifier.learning_rate = 0.01
-        classifier.n_estimators = 350
-        classifier.subsample = 0.3
-        classifier.fit(train_X, train_y.values.ravel())
-        pred_y = classifier.predict(valid_X)
+        model = xgboost.XGBRegressor(tree_method='gpu_hist',
+                                     predictor='gpu_predictor',
+                                     n_jobs=4)
+        model.learning_rate = 0.01
+        model.n_estimators = 350
+        model.subsample = 0.3
+        model.fit(train_X, train_y.values.ravel())
+        # predict causes error during multiprocessing; inplace_predict
+        # is believed to be solving that issue
+        pred_y = model.predict(valid_X)
+        # booster = model.get_booster()
+        # valid_X = cp.array(valid_X.to_numpy())
+        # pred_y = booster.inplace_predict(valid_X).get()
         fitness = metrics.r2_score(valid_y, pred_y)
         return fitness
