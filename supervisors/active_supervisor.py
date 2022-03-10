@@ -1,4 +1,5 @@
 import multiprocessing
+import os
 import tqdm
 
 from supervisors.passive_supervisor import PassiveSupervisor
@@ -29,13 +30,15 @@ class ActiveSupervisor(PassiveSupervisor):
 
     def __init__(self, genes_count, population_count, fitness, selection,
                  breeding, mutation, cataclysm, train_data_provider,
-                 valid_data_provider, running_condition, chromosome_type):
+                 valid_data_provider, running_condition, chromosome_type,
+                 output_folder):
         super().__init__(genes_count, population_count, selection, breeding,
                          mutation, cataclysm, chromosome_type, fitness)
         self.train_data_provider = train_data_provider
         self.valid_data_provider = valid_data_provider
         self.running_condition = running_condition
         self.chromosome_type = chromosome_type
+        self.output_folder = output_folder
 
     def evaluate_fitness(self):
         """
@@ -94,17 +97,17 @@ class ActiveSupervisor(PassiveSupervisor):
                   f"+/-{100 * self.valid_data_provider.stdev_len():.2f}%>")
             if current > ActiveSupervisor.current_best:
                 ActiveSupervisor.current_best = current
-                with open('results.txt', 'a') as file:
-                    file.write(f"{current}\n{master.genes}\n{train.genes}\n")
+                self.save_solution(current, master, train)
 
-    # def save_solution_if_better(self, chrom):
-    #     # if better fit or shorter sequence
-    #     if chrom.fitness > self.current_best_fit or \
-    #             (chrom.fitness == self.current_best_fit and
-    #              chrom.seq_len() < self.best_fit_seq_len):
-    #         self.current_best_fit = chrom.fitness
-    #         self.best_fit_seq_len = chrom.seq_len()
-    #         with open(self.output_path, 'a') as log_file:
-    #             print(str(chrom.genes), file=log_file)
+    def save_solution(self, current, master, train):
+        output_path = os.path.join('.', 'outputs', self.output_folder)
+        epoch_specific_path = os.path.join(output_path, str(self.epoch))
+        os.makedirs(epoch_specific_path, exist_ok=True)
+        with open(os.path.join(output_path, 'results.txt'), 'a') as file:
+            file.write(f"{self.epoch}\n{current}\n{master.genes}\n"
+                       f"{train.genes}\n")
+            master.fitness_function.model.save_model(
+                os.path.join(epoch_specific_path, 'model.xgb'))
+        # dbg_stp = 10
 
-    # print(f"Epoch [{self.epoch + 1}]:", end=' ')
+

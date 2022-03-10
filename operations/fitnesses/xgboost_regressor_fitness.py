@@ -11,6 +11,7 @@ class XGBoostRegressorR2:
         self.train_y = train_y
         self.valid_X = valid_X
         self.valid_y = valid_y
+        self.model = None
 
     def __call__(self,
                  master_chrom: Chromosome,
@@ -22,16 +23,16 @@ class XGBoostRegressorR2:
         train_y = mask_rows(self.train_y, train_chrom.genes)
         valid_X = mask_rows(valid_X, valid_chrom.genes)
         valid_y = mask_rows(self.valid_y, valid_chrom.genes)
-        model = xgboost.XGBRegressor(tree_method='gpu_hist',
-                                     predictor='gpu_predictor',
-                                     n_jobs=4)
-        model.learning_rate = 0.01
-        model.n_estimators = 350
-        model.subsample = 0.3
-        model.fit(train_X, train_y.values.ravel())
+        self.model = xgboost.XGBRegressor(tree_method='gpu_hist',
+                                          predictor='gpu_predictor',
+                                          n_jobs=4)
+        self.model.learning_rate = 0.01
+        self.model.n_estimators = 350
+        self.model.subsample = 0.3
+        self.model.fit(train_X, train_y.values.ravel())
         # predict causes error during multiprocessing; inplace_predict
         # is believed to be solving that issue
-        pred_y = model.predict(valid_X)
+        pred_y = self.model.predict(valid_X)
         # booster = model.get_booster()
         # valid_X = cp.array(valid_X.to_numpy())
         # pred_y = booster.inplace_predict(valid_X).get()
