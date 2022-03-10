@@ -21,16 +21,16 @@ def load_potato_data():
     for ind, model in enumerate(get_all_model_paths()):
         test_col = pd.read_csv(os.path.join(model, 'report-1', 'outputs.csv'))
         test[model] = test_col['prediction']
-        train_col = pd.read_csv(os.path.join(model, 'report-2', 'outputs.csv'))
-        train[model] = train_col['prediction']
-        valid_col = pd.read_csv(os.path.join(model, 'report-3', 'outputs.csv'))
+        valid_col = pd.read_csv(os.path.join(model, 'report-2', 'outputs.csv'))
         valid[model] = valid_col['prediction']
-        subval_col = pd.read_csv(os.path.join(model, 'report-4', 'outputs.csv'))
+        subval_col = pd.read_csv(os.path.join(model, 'report-3', 'outputs.csv'))
         subval[model] = subval_col['prediction']
+        train_col = pd.read_csv(os.path.join(model, 'report-4', 'outputs.csv'))
+        train[model] = train_col['prediction']
         if ind == 0:
             test_label = test_col['label']
-            train_label = train_col['label']
             valid_label = valid_col['label']
             subval_label = subval_col['label']
-    return test, test_label, train, train_label,\
-           valid, valid_label, subval, subval_label
+            train_label = train_col['label']
+    return test, test_label, valid, valid_label,\
+           subval, subval_label, train, train_label
