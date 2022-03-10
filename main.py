@@ -24,7 +24,7 @@ if __name__ == '__main__':
     # fitness_xgboost = XGBoostAcc(train_X, train_y, valid_X, valid_y)
 
     population_count = 100  # 400
-    train_data_provider = PassiveSupervisor(genes_count=len(subval_X),
+    train_data_provider = PassiveSupervisor(genes_count=len(train_X),
                                             population_count=population_count,
                                             selection=AdultSelection(0.6, 7),
                                             breeding=AdultBreeding(
@@ -62,5 +62,5 @@ if __name__ == '__main__':
                                  valid_data_provider=valid_data_provider,
                                  running_condition=lambda _: True,
                                  chromosome_type=DecayingChromosome,
-                                 output_folder='experiment_3')
+                                 output_folder='experiment_4')
     generator.run(test_data=(subval_X, subval_y))
