@@ -17,15 +17,14 @@ from projects.potatoes import load_potato_data
 from supervisors.passive_supervisor import PassiveSupervisor
 from supervisors.active_supervisor import ActiveSupervisor
 
-
 if __name__ == '__main__':
-    test_X, test_y, train_X, train_y, \
-    valid_X, valid_y, subval_X, subval_y = load_potato_data()
+    test_X, test_y, valid_X, valid_y, \
+    subval_X, subval_y, train_X, train_y = load_potato_data()
 
     # fitness_xgboost = XGBoostAcc(train_X, train_y, valid_X, valid_y)
 
     population_count = 100  # 400
-    train_data_provider = PassiveSupervisor(genes_count=len(train_X),
+    train_data_provider = PassiveSupervisor(genes_count=len(subval_X),
                                             population_count=population_count,
                                             selection=AdultSelection(0.6, 7),
                                             breeding=AdultBreeding(
@@ -49,8 +48,8 @@ if __name__ == '__main__':
 
     generator = ActiveSupervisor(genes_count=get_models_count(train_X),
                                  population_count=population_count,
-                                 fitness=XGBoostRegressorR2(train_X=train_X,
-                                                            train_y=train_y,
+                                 fitness=XGBoostRegressorR2(train_X=subval_X,
+                                                            train_y=subval_y,
                                                             valid_X=valid_X,
                                                             valid_y=valid_y),
                                  selection=AdultSelection(0.6, 7),
