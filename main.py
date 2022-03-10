@@ -48,8 +48,8 @@ if __name__ == '__main__':
 
     generator = ActiveSupervisor(genes_count=get_models_count(train_X),
                                  population_count=population_count,
-                                 fitness=XGBoostRegressorR2(train_X=subval_X,
-                                                            train_y=subval_y,
+                                 fitness=XGBoostRegressorR2(train_X=train_X,
+                                                            train_y=train_y,
                                                             valid_X=valid_X,
                                                             valid_y=valid_y),
                                  selection=AdultSelection(0.6, 7),
@@ -62,5 +62,5 @@ if __name__ == '__main__':
                                  valid_data_provider=valid_data_provider,
                                  running_condition=lambda _: True,
                                  chromosome_type=DecayingChromosome,
-                                 output_folder='experiment_2')
-    generator.run()
+                                 output_folder='experiment_3')
+    generator.run(test_data=(subval_X, subval_y))

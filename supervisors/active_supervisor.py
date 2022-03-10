@@ -69,7 +69,7 @@ class ActiveSupervisor(PassiveSupervisor):
             valid_population[ind].register_fitness(-fitness)
         liczba = 1
 
-    def run(self):
+    def run(self, test_data=None):
         self.evaluate_fitness()
         # f.e. number of max epochs exceeded or no improvement since n epochs
         while self.running_condition(self):
@@ -81,7 +81,8 @@ class ActiveSupervisor(PassiveSupervisor):
             train = self.train_data_provider.get_best()
             valid = self.valid_data_provider.get_best()
             complete = self.valid_data_provider.get_complete()
-            current = master.fitness_function(master, train, complete)
+            current = master.fitness_function(master, train, complete,
+                                              test_data=test_data)
             print(f"FIT: [{current:.4f}], "
                   f"master:[{master.fitness_value:.4f}]"
                   # f"<avg.len: {100 * self.avg_len() / len(master):.2f}%>, "
