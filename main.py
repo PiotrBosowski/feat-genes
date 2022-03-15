@@ -24,7 +24,7 @@ if __name__ == '__main__':
     # fitness_xgboost = XGBoostAcc(train_X, train_y, valid_X, valid_y)
 
     population_count = 100  # 400
-    train_data_provider = PassiveSupervisor(genes_count=len(train_X),
+    train_data_provider = PassiveSupervisor(genes_count=len(valid_X),
                                             population_count=population_count,
                                             selection=AdultSelection(0.6, 7),
                                             breeding=AdultBreeding(
@@ -46,10 +46,10 @@ if __name__ == '__main__':
                                             cataclysm=Cataclysm(),
                                             chromosome_type=DecayingChromosome)
 
-    generator = ActiveSupervisor(genes_count=get_models_count(train_X),
+    generator = ActiveSupervisor(genes_count=get_models_count(valid_X),
                                  population_count=population_count,
-                                 fitness=XGBoostRegressorR2(train_X=train_X,
-                                                            train_y=train_y,
+                                 fitness=XGBoostRegressorR2(train_X=valid_X,
+                                                            train_y=valid_y,
                                                             valid_X=subval_X,
                                                             valid_y=subval_y),
                                  selection=AdultSelection(0.6, 7),
@@ -62,5 +62,5 @@ if __name__ == '__main__':
                                  valid_data_provider=valid_data_provider,
                                  running_condition=lambda _: True,
                                  chromosome_type=DecayingChromosome,
-                                 output_folder='experiment_7')
-    generator.run(test_data=(valid_X, valid_y))
+                                 output_folder='experiment_8')
+    generator.run(test_data=(test_X, test_y))
