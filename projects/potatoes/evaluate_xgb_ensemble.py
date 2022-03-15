@@ -4,7 +4,7 @@ import warnings
 from pandas.errors import PerformanceWarning
 from sklearn import metrics
 
-from projects.potatoes import load_potato_data
+from projects.potatoes.potatoes import load_potato_data
 from utils.data_preparation import mask_columns
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -52,5 +52,5 @@ if __name__ == '__main__':
     test_X, test_y, valid_X, valid_y, \
     subval_X, subval_y, train_X, train_y = load_potato_data()
 
-    evaluate_saved_potato_model(os.path.join('..', 'outputs', 'experiment_6',
-                                             '1', 'model.xgb'))
+    evaluate_saved_potato_model(os.path.join('..', '..', 'outputs',
+                                             'experiment_6', '1', 'model.xgb'))

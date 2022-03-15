@@ -12,8 +12,8 @@ from operations.crossovers.crossover import TwoPointCrossover
 from operations.fitnesses.xgboost_regressor_fitness import XGBoostRegressorR2
 from operations.mutations.mutation import Mutation
 from operations.selections.adult_selection import AdultSelection
-from projects.covid import get_models_count
-from projects.potatoes import load_potato_data
+from projects.covid.covid import get_models_count
+from projects.potatoes.potatoes import load_potato_data
 from supervisors.passive_supervisor import PassiveSupervisor
 from supervisors.active_supervisor import ActiveSupervisor
 
