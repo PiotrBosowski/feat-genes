@@ -2,6 +2,9 @@ import warnings
 
 from pandas.errors import PerformanceWarning
 
+from chromosome.trivial_chromosome import TrivialChromosome
+from supervisors.base_passive_supervisor import TrivialPassiveSupervisor
+
 warnings.simplefilter(action='ignore', category=FutureWarning)
 warnings.simplefilter(action='ignore', category=PerformanceWarning)
 
@@ -35,16 +38,10 @@ if __name__ == '__main__':
                                             cataclysm=Cataclysm(),
                                             chromosome_type=DecayingChromosome)
 
-    valid_data_provider = PassiveSupervisor(genes_count=len(subval_X),
-                                            population_count=population_count,
-                                            selection=AdultSelection(0.6, 7),
-                                            breeding=AdultBreeding(
-                                                TwoPointCrossover(), 7),
-                                            mutation=Mutation(
-                                                chrom_mut_chance=0.1,
-                                                gen_mut_chance=0.1),
-                                            cataclysm=Cataclysm(),
-                                            chromosome_type=DecayingChromosome)
+    valid_data_provider = TrivialPassiveSupervisor(
+        genes_count=len(subval_X),
+        population_count=population_count,
+        chromosome_type=TrivialChromosome)
 
     generator = ActiveSupervisor(genes_count=get_models_count(valid_X),
                                  population_count=population_count,
@@ -62,5 +59,5 @@ if __name__ == '__main__':
                                  valid_data_provider=valid_data_provider,
                                  running_condition=lambda _: True,
                                  chromosome_type=DecayingChromosome,
-                                 output_folder='experiment_8')
-    generator.run(test_data=(test_X, test_y))
+                                 output_folder='experiment_11')
+    generator.run()
