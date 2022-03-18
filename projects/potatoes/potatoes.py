@@ -2,7 +2,7 @@ import os
 import pandas as pd
 
 models_dir = r'/home/peter/media/temp-share/temp/kplabs/potatoes/' \
-             r'models_fixed_datasplit'
+             r'models_fixed_datasplit_timeframe-0'
 
 
 def get_all_model_paths():

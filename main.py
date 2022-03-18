@@ -59,5 +59,5 @@ if __name__ == '__main__':
                                  valid_data_provider=valid_data_provider,
                                  running_condition=lambda _: True,
                                  chromosome_type=DecayingChromosome,
-                                 output_folder='experiment_11')
+                                 output_folder='experiment_12_timeframe-0_only')
     generator.run()
